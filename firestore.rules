@@ -1,0 +1,236 @@
+rules_version = '2';
+
+// ZestyGo Firestore rules. Deny by default.
+// Clients read narrowly scoped data and write only a few low-risk user-owned documents.
+// All business writes (orders, payments, menus, config, ...) happen in Cloud Functions,
+// which use the Admin SDK and therefore must authorize every call themselves.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ---------- helpers ----------
+    function signedIn() {
+      return request.auth != null;
+    }
+    function role() {
+      return signedIn() ? request.auth.token.get('role', 'none') : 'none';
+    }
+    function isAdmin() {
+      return role() in ['admin', 'super_admin'];
+    }
+    function isStaff() {
+      return isAdmin() || role() == 'support';
+    }
+    function isSelf(uid) {
+      return signedIn() && request.auth.uid == uid;
+    }
+    function ownsRestaurant(rid) {
+      return role() in ['restaurant_owner', 'restaurant_manager']
+        && request.auth.token.get('restaurantId', '') == rid;
+    }
+    function isAssignedPartner(data) {
+      return role() == 'delivery_partner'
+        && data.get('deliveryPartnerId', '') == request.auth.uid;
+    }
+    function canReadOrder(data) {
+      return isSelf(data.get('customerId', ''))
+        || ownsRestaurant(data.get('restaurantId', ''))
+        || isAssignedPartner(data)
+        || isStaff();
+    }
+    function restaurantDoc(rid) {
+      return get(/databases/$(database)/documents/restaurants/$(rid)).data;
+    }
+    function orderDoc(oid) {
+      return get(/databases/$(database)/documents/orders/$(oid)).data;
+    }
+
+    // ---------- users ----------
+    match /users/{uid} {
+      allow read: if isSelf(uid) || isStaff();
+      allow create, delete: if false;
+      allow update: if isSelf(uid)
+        && request.resource.data.diff(resource.data).affectedKeys()
+             .hasOnly(['displayName', 'photoUrl', 'notificationPrefs', 'updatedAt']);
+
+      match /addresses/{addressId} {
+        allow read: if isSelf(uid) || isStaff();
+        allow write: if false; // usersUpsertAddress / usersDeleteAddress
+      }
+
+      match /devices/{deviceId} {
+        allow read: if isSelf(uid);
+        allow create, update: if isSelf(uid)
+          && request.resource.data.keys().hasOnly(['fcmToken', 'platform', 'appVersion', 'updatedAt']);
+        allow delete: if isSelf(uid);
+      }
+
+      match /notifications/{key} {
+        allow read: if isSelf(uid);
+        allow update: if isSelf(uid)
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['read']);
+        allow create, delete: if false;
+      }
+    }
+
+    // ---------- restaurants and menus ----------
+    match /restaurants/{rid} {
+      allow read: if resource.data.get('status', '') == 'approved'
+        || ownsRestaurant(rid)
+        || isStaff();
+      allow write: if false;
+
+      match /private/{docId} {
+        allow read: if ownsRestaurant(rid) || isAdmin();
+        allow write: if false;
+      }
+
+      match /menu_categories/{cid} {
+        allow read: if restaurantDoc(rid).get('status', '') == 'approved'
+          || ownsRestaurant(rid)
+          || isStaff();
+        allow write: if false;
+      }
+    }
+
+    // Covers /restaurants/{rid}/menu_items/{iid} and collection-group dish search.
+    // Requires denormalized restaurantId and restaurantApproved on each item.
+    match /{path=**}/menu_items/{itemId} {
+      allow read: if resource.data.get('restaurantApproved', false) == true
+        || ownsRestaurant(resource.data.get('restaurantId', ''))
+        || isStaff();
+      allow write: if false;
+    }
+
+    // ---------- cart and favorites (client-owned, display only) ----------
+    match /carts/{uid} {
+      allow read, delete: if isSelf(uid);
+      allow create, update: if isSelf(uid)
+        && request.resource.data.keys().hasOnly(['restaurantId', 'lines', 'couponCode', 'updatedAt'])
+        && request.resource.data.lines.size() <= 30;
+    }
+
+    match /favorites/{uid}/restaurants/{rid} {
+      allow read, delete: if isSelf(uid);
+      allow create: if isSelf(uid)
+        && request.resource.data.keys().hasOnly(['createdAt']);
+      allow update: if false;
+    }
+
+    // ---------- orders ----------
+    match /orders/{orderId} {
+      allow read: if canReadOrder(resource.data);
+      allow write: if false;
+
+      match /events/{eventId} {
+        allow read: if canReadOrder(orderDoc(orderId));
+        allow write: if false;
+      }
+    }
+
+    // ---------- delivery ----------
+    match /deliveries/{orderId} {
+      allow read: if (role() == 'delivery_partner' && resource.data.get('partnerId', '') == request.auth.uid)
+        || ownsRestaurant(resource.data.get('restaurantId', ''))
+        || isStaff();
+      allow write: if false;
+
+      match /offers/{partnerId} {
+        allow read: if isSelf(partnerId) || isStaff();
+        allow write: if false;
+      }
+    }
+
+    match /delivery_locations/{orderId} {
+      allow read: if (isSelf(resource.data.get('customerId', '')) && resource.data.get('active', false) == true)
+        || isStaff();
+      allow write: if false;
+    }
+
+    match /delivery_partners/{uid} {
+      allow read: if isSelf(uid) || isStaff();
+      allow write: if false;
+    }
+
+    // ---------- money ----------
+    match /payments/{paymentId} {
+      allow read: if isAdmin();
+      allow write: if false;
+      match /{sub=**} {
+        allow read, write: if false;
+      }
+    }
+
+    match /refunds/{refundId} {
+      allow read: if isStaff();
+      allow write: if false;
+    }
+
+    match /coupons/{couponId} {
+      allow read: if isStaff();
+      allow write: if false;
+    }
+
+    match /coupon_redemptions/{orderId} {
+      allow read: if isStaff();
+      allow write: if false;
+    }
+
+    // ---------- reviews and support ----------
+    match /reviews/{orderId} {
+      allow read: if resource.data.get('status', '') == 'visible'
+        || isSelf(resource.data.get('customerId', ''))
+        || isStaff();
+      allow write: if false;
+    }
+
+    match /support_tickets/{ticketId} {
+      allow read: if isSelf(resource.data.get('uid', '')) || isStaff();
+      allow write: if false;
+
+      match /messages/{messageId} {
+        allow read: if isSelf(get(/databases/$(database)/documents/support_tickets/$(ticketId)).data.uid)
+          || isStaff();
+        allow write: if false;
+      }
+    }
+
+    // ---------- config and public content ----------
+    match /platform_config/public {
+      allow read: if true;
+      allow write: if false;
+    }
+    match /platform_config/{docId} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
+    match /service_areas/{areaId} {
+      allow read: if true;
+      allow write: if false;
+    }
+    match /food_categories/{id} {
+      allow read: if true;
+      allow write: if false;
+    }
+    match /banners/{id} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // ---------- operations ----------
+    match /stats_daily/{id} {
+      allow read: if isAdmin() || ownsRestaurant(resource.data.get('restaurantId', ''));
+      allow write: if false;
+    }
+
+    match /admin_audit_logs/{logId} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
+    // quotes, idempotency_keys and everything else: no client access (default deny)
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

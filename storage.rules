@@ -1,0 +1,72 @@
+rules_version = '2';
+
+// ZestyGo Storage rules. Deny by default.
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+    function role() {
+      return signedIn() ? request.auth.token.get('role', 'none') : 'none';
+    }
+    function isAdmin() {
+      return role() in ['admin', 'super_admin'];
+    }
+    function isSelf(uid) {
+      return signedIn() && request.auth.uid == uid;
+    }
+    function ownsRestaurant(rid) {
+      return role() in ['restaurant_owner', 'restaurant_manager']
+        && request.auth.token.get('restaurantId', '') == rid;
+    }
+    function isImage() {
+      return request.resource.contentType.matches('image/(jpeg|png|webp)');
+    }
+    function isImageOrPdf() {
+      return request.resource.contentType.matches('image/(jpeg|png|webp)|application/pdf');
+    }
+    function underMb(mb) {
+      return request.resource.size < mb * 1024 * 1024;
+    }
+
+    // Public restaurant images (logo, cover, dish photos)
+    match /public/restaurants/{rid}/{allPaths=**} {
+      allow read: if true;
+      allow write: if ownsRestaurant(rid) && isImage() && underMb(5);
+      allow delete: if ownsRestaurant(rid) || isAdmin();
+    }
+
+    // Promotional banners (uploaded by admins)
+    match /public/banners/{file} {
+      allow read: if true;
+      allow write: if isAdmin() && isImage() && underMb(5);
+      allow delete: if isAdmin();
+    }
+
+    // Restaurant verification documents (private)
+    match /private/restaurants/{rid}/documents/{file} {
+      allow read: if ownsRestaurant(rid) || isAdmin();
+      allow write: if ownsRestaurant(rid) && isImageOrPdf() && underMb(10);
+      allow delete: if isAdmin();
+    }
+
+    // Delivery partner documents (private)
+    match /private/partners/{uid}/documents/{file} {
+      allow read: if isSelf(uid) || isAdmin();
+      allow write: if isSelf(uid) && role() == 'delivery_partner' && isImageOrPdf() && underMb(10);
+      allow delete: if isAdmin();
+    }
+
+    // User avatars (private to the user)
+    match /private/users/{uid}/avatar/{file} {
+      allow read: if isSelf(uid) || isAdmin();
+      allow write: if isSelf(uid) && isImage() && underMb(2);
+      allow delete: if isSelf(uid);
+    }
+
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

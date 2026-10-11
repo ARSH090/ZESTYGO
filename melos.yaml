@@ -1,0 +1,17 @@
+# Melos 6 style workspace. If you use Melos 7 / Dart workspaces, move this config
+# to the root pubspec.yaml as documented by Melos.
+name: zestygo
+packages:
+  - apps/*
+  - packages/*
+
+scripts:
+  analyze:
+    run: melos exec -c 4 -- flutter analyze --fatal-infos
+    description: Static analysis for every package and app
+  format-check:
+    run: dart format --output=none --set-exit-if-changed apps packages
+    description: Fail if any Dart file is unformatted
+  test:
+    run: melos exec -c 2 --dir-exists=test -- flutter test
+    description: Run Flutter tests in packages and apps that have tests

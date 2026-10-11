@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>ZestyGo Mobile App</title>
+<!-- Tailwind CSS v3 with Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              orange: '#FF8A00',
+              accent: '#FF6B00',
+              dark: '#121012',
+              card: 'rgba(38, 32, 36, 0.65)',
+              glass: 'rgba(255, 255, 255, 0.08)',
+              border: 'rgba(255, 255, 255, 0.12)'
+            }
+          },
+          fontFamily: {
+            sans: ['-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+<!-- Lucide Icons -->
+<script src="https://unpkg.com/lucide@latest"></script>
+<!-- Custom CSS for Glassmorphism & Micro-Interactions -->
+<style data-purpose="glassmorphic-styles">
+    /* Glass card foundation */
+    .glass-card {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.03) 100%);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+    }
+    
+    .glass-pill {
+      background: rgba(255, 255, 255, 0.07);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .glass-nav {
+      background: rgba(22, 19, 23, 0.85);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .glow-orange {
+      box-shadow: 0 8px 24px -4px rgba(255, 138, 0, 0.5);
+    }
+
+    /* Ambient background glows matching preview */
+    .ambient-glow-left {
+      background: radial-gradient(circle at 10% 20%, rgba(255, 122, 0, 0.18) 0%, rgba(0, 0, 0, 0) 55%);
+    }
+
+    .ambient-glow-right {
+      background: radial-gradient(circle at 85% 30%, rgba(255, 100, 0, 0.15) 0%, rgba(0, 0, 0, 0) 55%);
+    }
+
+    /* Hide scrollbars for slick mobile carousels */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+<style data-purpose="custom-toggles">
+    /* Apple style custom toggles */
+    .toggle-checkbox:checked {
+      right: 2px;
+      border-color: #FF8A00;
+      background-color: #ffffff;
+    }
+    .toggle-checkbox:checked + .toggle-label {
+      background-color: #FF8A00;
+    }
+  </style>
+</head>
+<body class="bg-[#0b0a0d] text-white min-h-screen flex items-center justify-center p-2 sm:p-6 select-none font-sans overflow-x-hidden">
+<!-- Ambient Glow Backdrop -->
+<div class="fixed inset-0 pointer-events-none ambient-glow-left z-0"></div>
+<div class="fixed inset-0 pointer-events-none ambient-glow-right z-0"></div>
+<!-- BEGIN: Showcase Container (Two Mobile Frames Side-by-Side) -->
+<main class="relative z-10 w-full max-w-6xl flex flex-col xl:flex-row items-center justify-center gap-8 py-4">
+<!-- ========================================== -->
+<!-- LEFT PHONE: HOME & DISCOVERY SCREEN        -->
+<!-- ========================================== -->
+<section class="relative w-full max-w-[395px] h-[830px] rounded-[48px] bg-[#141215] border-[7px] border-[#2d2931] shadow-[0_25px_60px_rgba(0,0,0,0.8)] flex flex-col overflow-hidden" data-purpose="home-screen">
+<!-- BEGIN: iOS Status Bar -->
+<div class="h-11 px-8 pt-3 flex justify-between items-center text-xs font-semibold tracking-wider text-neutral-300 z-30">
+<span>9:41</span>
+<!-- Dynamic Island / Speaker notch simulation -->
+<div class="w-20 h-4 bg-black/60 rounded-full mx-auto"></div>
+<div class="flex items-center space-x-1.5">
+<i class="w-3.5 h-3.5" data-lucide="signal"></i>
+<i class="w-3.5 h-3.5" data-lucide="wifi"></i>
+<i class="w-4 h-4" data-lucide="battery-charging"></i>
+</div>
+</div>
+<!-- END: iOS Status Bar -->
+<!-- Scrollable Content Area -->
+<div class="flex-1 overflow-y-auto no-scrollbar px-5 pb-24 pt-2">
+<!-- BEGIN: Header Top Bar -->
+<header class="flex justify-between items-center mb-5">
+<!-- Hamburger Menu Button -->
+<button aria-label="Menu" class="w-11 h-11 rounded-full glass-pill flex items-center justify-center text-neutral-300 hover:text-white transition">
+<i class="w-5 h-5" data-lucide="menu"></i>
+</button>
+<!-- User Profile Avatar with Badge -->
+<div class="relative">
+<img alt="Alex" class="w-11 h-11 rounded-full object-cover border-2 border-white/20 p-0.5" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBHs3Q0rljPc3cDTDbMJVL9i0Z44DDT44lPostUILQK3oOzaroeaJl1wSrQx2p6b9xP9cp4vLTIl5X9GnX85hqh5SZgZR4cFadMEXcLmFi4pBbTDV1jCcwnAdT5IWju-SxTCkMMzV1iZBVDTwbx2eIBW93Y0bYPkd0FCyEZtftngoxBHbk2rorKUuAJVmEb2ih32QoPu3uLHgPsCfsGSGIJbp19xGl3gqY6ecWNpBT4I7IRXA5pDYyJag"/>
+<span class="absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full border-2 border-[#141215]"></span>
+</div>
+</header>
+<!-- END: Header Top Bar -->
+<!-- Greeting & Headline -->
+<div class="mb-5">
+<p class="text-xs text-neutral-400 font-medium">Hi, Alex 👋</p>
+<h1 class="text-3xl font-extrabold tracking-tight leading-tight mt-0.5">
+            Good Food<br/>
+            Good <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#FF8A00] to-[#FFB703]">Mood!</span>
+</h1>
+</div>
+<!-- BEGIN: Search Bar -->
+<div class="relative flex items-center mb-5" data-purpose="search-bar">
+<div class="absolute left-4 text-neutral-400 pointer-events-none">
+<i class="w-4 h-4" data-lucide="search"></i>
+</div>
+<input class="w-full h-12 pl-11 pr-12 rounded-2xl glass-card text-xs text-white placeholder-neutral-400 border border-white/10 focus:outline-none focus:border-[#FF8A00]/60 transition" placeholder="Search your favorite food" type="text"/>
+<button aria-label="Filter" class="absolute right-2 w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center text-neutral-300 hover:text-white transition">
+<i class="w-4 h-4" data-lucide="sliders-horizontal"></i>
+</button>
+</div>
+<!-- END: Search Bar -->
+<!-- BEGIN: Horizontal Category Filter -->
+<nav aria-label="Food Categories" class="flex items-center space-x-3 overflow-x-auto no-scrollbar pb-1 mb-5">
+<!-- Active Burger Pill -->
+<button class="flex flex-col items-center justify-center w-16 h-20 rounded-2xl bg-gradient-to-b from-[#FF8A00] to-[#E56A00] glow-orange shadow-lg flex-shrink-0 transition transform active:scale-95">
+<span class="text-2xl mb-1">🍔</span>
+<span class="text-[11px] font-semibold tracking-wide text-white">Burger</span>
+</button>
+<!-- Pizza Pill -->
+<button class="flex flex-col items-center justify-center w-16 h-20 rounded-2xl glass-pill hover:bg-white/10 flex-shrink-0 transition">
+<span class="text-2xl mb-1">🍕</span>
+<span class="text-[11px] font-medium text-neutral-400">Pizza</span>
+</button>
+<!-- Chicken Pill -->
+<button class="flex flex-col items-center justify-center w-16 h-20 rounded-2xl glass-pill hover:bg-white/10 flex-shrink-0 transition">
+<span class="text-2xl mb-1">🍗</span>
+<span class="text-[11px] font-medium text-neutral-400">Chicken</span>
+</button>
+<!-- Fries Pill -->
+<button class="flex flex-col items-center justify-center w-16 h-20 rounded-2xl glass-pill hover:bg-white/10 flex-shrink-0 transition">
+<span class="text-2xl mb-1">🍟</span>
+<span class="text-[11px] font-medium text-neutral-400">Fries</span>
+</button>
+<!-- Drink Pill -->
+<button class="flex flex-col items-center justify-center w-16 h-20 rounded-2xl glass-pill hover:bg-white/10 flex-shrink-0 transition">
+<span class="text-2xl mb-1">🥤</span>
+<span class="text-[11px] font-medium text-neutral-400">Drink</span>
+</button>
+</nav>
+<!-- END: Horizontal Category Filter -->
+<!-- BEGIN: Promo Banner Card -->
+<article class="relative rounded-3xl glass-card p-4 overflow-hidden mb-6 border border-white/10" data-purpose="promo-banner">
+<!-- Subtle background light inside card -->
+<div class="absolute -right-10 -bottom-10 w-44 h-44 bg-[#FF8A00]/20 rounded-full blur-2xl"></div>
+<div class="relative z-10 w-[58%]">
+<div class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-white/10 text-[9px] font-semibold text-neutral-300 mb-2">
+<span>🔥</span> Limited Time Offer
+            </div>
+<h2 class="text-base font-bold text-white leading-tight">Spicy Burger</h2>
+<h3 class="text-base font-bold text-[#FF8A00] leading-tight mb-3">Combo</h3>
+<button class="px-4 py-2 rounded-xl bg-gradient-to-r from-[#FF8A00] to-[#FF6B00] text-xs font-bold text-white shadow-md glow-orange hover:brightness-110 active:scale-95 transition">
+              Order Now
+            </button>
+</div>
+<!-- Promo Badge: 20% OFF -->
+<div class="absolute top-8 right-32 z-20 w-11 h-11 rounded-full bg-black/60 border border-white/20 backdrop-blur-md flex flex-col items-center justify-center text-center shadow-lg">
+<span class="text-[10px] font-bold text-white leading-none">20%</span>
+<span class="text-[7px] text-neutral-300 font-semibold uppercase leading-none">OFF</span>
+</div>
+<!-- Promo Combo Burger Image -->
+<div class="absolute -right-3 -bottom-2 w-48 h-36 z-10 pointer-events-none">
+<img alt="Spicy Burger Combo" class="w-full h-full object-contain filter drop-shadow-2xl" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPcNjVq9jRZiEjlq6PKHJQyUjaMXB_p4e6bCXuQwb8Y2gozKZ4OJ8VciyISPtk5hjnLeHdgohCUzstiKoqQCekmvd2n_mZ4IC0LdBOTxjVD8c_5o24hKGuc_q9Yf9bui72V9lUqnHylxm-2dIV03Z2HbMomNSfCXTUvjheAX0YBVA1EZKCk3vLP-I3WJ8Bw4aQVve9bgrhIf0tCU3o_IWIy6SdKfK2LIw8heCLVF_9ZDdidPlUJPQ9qQ"/>
+</div>
+</article>
+<!-- END: Promo Banner Card -->
+<!-- BEGIN: Popular Now Section -->
+<section data-purpose="popular-items">
+<div class="flex justify-between items-center mb-3">
+<h3 class="text-sm font-bold text-white tracking-wide">Popular Now</h3>
+<a class="text-xs text-neutral-400 hover:text-[#FF8A00] transition" href="#">View All</a>
+</div>
+<!-- Horizontal Product Grid / Cards -->
+<div class="flex gap-3 overflow-x-auto no-scrollbar pb-2">
+<!-- Food Card 1: Cheese Burger -->
+<div class="w-[140px] flex-shrink-0 rounded-2xl glass-card p-2.5 flex flex-col justify-between relative group hover:border-white/30 transition">
+<button aria-label="Favorite" class="absolute top-2 right-2 text-neutral-400 hover:text-red-500 z-10">
+<i class="w-3.5 h-3.5" data-lucide="heart"></i>
+</button>
+<div class="w-full h-24 my-1 flex items-center justify-center">
+<img alt="Cheese Burger" class="w-24 h-24 object-contain filter drop-shadow-md group-hover:scale-105 transition duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2LapUpb9uwumhzfSFMNZLWJ2a6bCSoA0gmoZZSi5Hq7DnynlhA3zyiYW7ZA9Vk-PvNJqVS8et0G6XdQQFO1ZryYSq8Ga_UEKsVeIluqHP-w_MvzXOwuYrl6Ny6AxeQpmazfGaQ_RCob384MYUTDJr9OP_JemV-zeIHAVkRrnp3ts9WpIclCYGUz4hHDPlh9DpWyBWpiZD7UH9XK1pKWS7bS4dB6qK8WqweTG1cGudHqtUYxk4YMggHg"/>
+</div>
+<div>
+<h4 class="text-xs font-bold text-white truncate">Cheese Burger</h4>
+<div class="flex items-center justify-between mt-2">
+<span class="text-xs font-bold text-[#FF8A00]">$ 5.49</span>
+<button aria-label="Add to cart" class="w-6 h-6 rounded-full bg-[#FF8A00] text-white flex items-center justify-center shadow-md hover:scale-110 active:scale-95 transition">
+<i class="w-3.5 h-3.5" data-lucide="plus"></i>
+</button>
+</div>
+</div>
+</div>
+<!-- Food Card 2: Spicy Chicken Burger (Featured/Selected) -->
+<div class="w-[140px] flex-shrink-0 rounded-2xl glass-card p-2.5 flex flex-col justify-between relative border-[#FF8A00]/40 group hover:border-[#FF8A00] transition">
+<!-- Spicy Pill Tag -->
+<span class="absolute top-2 left-2 px-1.5 py-0.5 rounded-full bg-red-500/20 text-red-400 text-[8px] font-bold border border-red-500/30 flex items-center gap-0.5">
+                🌶️ Spicy
+              </span>
+<button aria-label="Favorite" class="absolute top-2 right-2 text-red-500 z-10">
+<i class="w-3.5 h-3.5 fill-red-500" data-lucide="heart"></i>
+</button>
+<div class="w-full h-24 my-1 flex items-center justify-center">
+<img alt="Spicy Chicken Burger" class="w-24 h-24 object-contain filter drop-shadow-md group-hover:scale-105 transition duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBv1PweWDdqTyaHVYN-FX1-TfvbQ9ieKIB46QqIx6hUF1F0DnK4WtuJ70BgC-C-lyrK2PrgnSdE2wpzAWc8S45eTBEuwAP0DfJnletAcJurJPb2BZMdelpPrq1k95Buud1ngxQQBTsIFi-w09J6Alp7L4IZsqd3an2TMbCCHkC4EX1Wk3f4hI_tTxBxfeH0h6jO4OcH58dA0XdmezAcaVYHcJZB5LYellF0XzFU_0n7bv9RlBpRcgFKDg"/>
+</div>
+<div>
+<h4 class="text-xs font-bold text-white truncate">Spicy Chicken Burger</h4>
+<div class="flex items-center justify-between mt-2">
+<span class="text-xs font-bold text-[#FF8A00]">$ 6.49</span>
+<button aria-label="Add to cart" class="w-6 h-6 rounded-full bg-[#FF8A00] text-white flex items-center justify-center shadow-md hover:scale-110 active:scale-95 transition">
+<i class="w-3.5 h-3.5" data-lucide="plus"></i>
+</button>
+</div>
+</div>
+</div>
+<!-- Food Card 3: Double Beef Burger -->
+<div class="w-[140px] flex-shrink-0 rounded-2xl glass-card p-2.5 flex flex-col justify-between relative group hover:border-white/30 transition">
+<button aria-label="Favorite" class="absolute top-2 right-2 text-neutral-400 hover:text-red-500 z-10">
+<i class="w-3.5 h-3.5" data-lucide="heart"></i>
+</button>
+<div class="w-full h-24 my-1 flex items-center justify-center">
+<img alt="Double Beef Burger" class="w-24 h-24 object-contain filter drop-shadow-md group-hover:scale-105 transition duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDOwwPaU42kOZKKVaDo01ndfQuw4-1ttwzQzaJgGc50wxFuEOwc00P7xOsjbH5Jcg0snoNA2L5SbLj8J6-qV34a4ckm4x6cKn7PjLDr5Cd1JyS934NC6PEs8QDuGJJpw2P3qn2d19i9Wf05M8JjCUb5fibRAASS3QpIMMnlqmuULlRmnaduVHLWqS-XikJN7UJ2JNxbUAQs0HGaX_B8N5YktkqnrTksjJpkXYzUO97snwNrKiYN56R86Q"/>
+</div>
+<div>
+<h4 class="text-xs font-bold text-white truncate">Double Beef</h4>
+<div class="flex items-center justify-between mt-2">
+<span class="text-xs font-bold text-[#FF8A00]">$ 7.49</span>
+<button aria-label="Add to cart" class="w-6 h-6 rounded-full bg-[#FF8A00] text-white flex items-center justify-center shadow-md hover:scale-110 active:scale-95 transition">
+<i class="w-3.5 h-3.5" data-lucide="plus"></i>
+</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- END: Popular Now Section -->
+</div>
+<!-- BEGIN: Bottom Frosted Glass Navigation Bar -->
+<div class="absolute bottom-4 left-4 right-4 z-40">
+<nav class="h-14 rounded-2xl glass-nav flex items-center justify-around px-2 shadow-2xl">
+<!-- Home (Active) -->
+<button class="flex flex-col items-center justify-center text-[#FF8A00] space-y-0.5">
+<i class="w-5 h-5" data-lucide="home"></i>
+<span class="text-[9px] font-bold tracking-tight">Home</span>
+</button>
+<!-- Offers -->
+<button class="flex flex-col items-center justify-center text-neutral-400 hover:text-white space-y-0.5 transition">
+<i class="w-5 h-5" data-lucide="tag"></i>
+<span class="text-[9px] font-medium tracking-tight">Offers</span>
+</button>
+<!-- Orders -->
+<button class="flex flex-col items-center justify-center text-neutral-400 hover:text-white space-y-0.5 transition">
+<i class="w-5 h-5" data-lucide="shopping-bag"></i>
+<span class="text-[9px] font-medium tracking-tight">Orders</span>
+</button>
+<!-- Favorite -->
+<button class="flex flex-col items-center justify-center text-neutral-400 hover:text-white space-y-0.5 transition">
+<i class="w-5 h-5" data-lucide="heart"></i>
+<span class="text-[9px] font-medium tracking-tight">Favorite</span>
+</button>
+</nav>
+</div>
+<!-- END: Bottom Frosted Glass Navigation Bar -->
+<!-- Home Indicator Bar -->
+<div class="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-32 h-1 bg-white/40 rounded-full z-50"></div>
+</section>
+<!-- ========================================== -->
+<!-- RIGHT PHONE: DISH DETAILS & CUSTOMIZATION  -->
+<!-- ========================================== -->
+<section class="relative w-full max-w-[395px] h-[830px] rounded-[48px] bg-[#141215] border-[7px] border-[#2d2931] shadow-[0_25px_60px_rgba(0,0,0,0.8)] flex flex-col overflow-hidden" data-purpose="dish-details-screen">
+<!-- BEGIN: iOS Status Bar -->
+<div class="h-11 px-8 pt-3 flex justify-between items-center text-xs font-semibold tracking-wider text-neutral-300 z-30">
+<span>9:41</span>
+<div class="w-20 h-4 bg-black/60 rounded-full mx-auto"></div>
+<div class="flex items-center space-x-1.5">
+<i class="w-3.5 h-3.5" data-lucide="signal"></i>
+<i class="w-3.5 h-3.5" data-lucide="wifi"></i>
+<i class="w-4 h-4" data-lucide="battery-charging"></i>
+</div>
+</div>
+<!-- END: iOS Status Bar -->
+<!-- Upper Hero Dish Backdrop -->
+<div class="relative w-full h-[400px] flex items-center justify-center overflow-hidden">
+<!-- Top Action Icons -->
+<div class="absolute top-2 left-5 right-5 flex justify-between items-center z-30">
+<button aria-label="Go Back" class="w-10 h-10 rounded-full glass-pill flex items-center justify-center text-white hover:bg-white/20 transition">
+<i class="w-5 h-5" data-lucide="chevron-left"></i>
+</button>
+<button aria-label="Favorite" class="w-10 h-10 rounded-full glass-pill flex items-center justify-center text-red-500 hover:bg-white/20 transition">
+<i class="w-5 h-5 fill-red-500" data-lucide="heart"></i>
+</button>
+</div>
+<!-- Burger Ambient Glow Background -->
+<div class="absolute inset-0 bg-gradient-to-b from-[#ff8000]/15 via-transparent to-[#141215]"></div>
+<!-- Large Dish Realistic Imagery -->
+<img alt="Spicy Chicken Burger Full View" class="w-[290px] h-[290px] object-cover rounded-3xl drop-shadow-[0_20px_35px_rgba(0,0,0,0.9)] z-10 transform scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBNoaCn23kgwhy6xxqL7fYMuNEFlxynNx2G-i2WV98HJMPQV4BTcjdJCVyrySZsMpCT-klTdDbupNCRbDf-agq1MI3_tz-ilxu4cs6oSK9Lr2Bpk-Vbxzrr78-sVjOCmCB1jj-_-tz3z5KfClfHrr1URfacsJRKRDthVsqxYk7jEqKrOUJb3egZUzm3nO3Oj5USqnxetnD8PmWkW5sMCeaVZj31stV1tTphth6nicEr6dBklDnUGlsFhQ"/>
+</div>
+<!-- BEGIN: Dish Customization Glass Card Drawer -->
+<div class="relative -mt-12 flex-1 rounded-t-[36px] glass-card px-5 pt-5 pb-24 z-20 overflow-y-auto no-scrollbar border-t border-white/20 flex flex-col justify-between">
+<div>
+<!-- Title Row & Tags -->
+<div class="flex items-center justify-between mb-2">
+<div class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-red-500/20 text-red-400 text-[10px] font-bold border border-red-500/30">
+<span>🌶️</span> Spicy
+            </div>
+<!-- Nutrition / Grid details icon -->
+<button aria-label="Nutritional info" class="w-7 h-7 rounded-lg glass-pill flex items-center justify-center text-neutral-400 hover:text-white">
+<i class="w-4 h-4" data-lucide="layout-grid"></i>
+</button>
+</div>
+<h2 class="text-xl font-bold text-white tracking-tight mb-1.5">Spicy Chicken Burger</h2>
+<!-- Rating & Price Header -->
+<div class="flex items-center justify-between mb-2">
+<div class="flex items-center gap-1.5 text-xs text-neutral-300">
+<span class="text-amber-400">★</span>
+<span class="font-bold text-white">4.8</span>
+<span class="text-neutral-400 text-[11px]">(120)</span>
+</div>
+<span class="text-lg font-extrabold text-[#FF8A00]">$ 6.49</span>
+</div>
+<!-- Description -->
+<p class="text-[11px] text-neutral-400 leading-relaxed mb-4">
+            Crispy spicy chicken patty with fresh lettuce, tomato, onion and our special secret house chili sauce.
+          </p>
+<!-- Customization Section -->
+<div class="border-t border-white/10 pt-3">
+<h3 class="text-xs font-bold text-white uppercase tracking-wider mb-2.5">Customize</h3>
+<!-- Size Selector Pills -->
+<div class="flex items-center justify-between gap-2 mb-3.5">
+<span class="text-xs text-neutral-400">Size</span>
+<div class="flex items-center gap-1.5">
+<!-- Regular (Selected) -->
+<button class="px-3 py-1 rounded-lg bg-[#FF8A00] text-white text-[11px] font-semibold glow-orange transition">
+                  Regular
+                </button>
+<!-- Large -->
+<button class="px-3 py-1 rounded-lg glass-pill text-neutral-400 text-[11px] font-medium hover:text-white transition">
+                  Large
+                </button>
+<!-- X Large -->
+<button class="px-3 py-1 rounded-lg glass-pill text-neutral-400 text-[11px] font-medium hover:text-white transition">
+                  X Large
+                </button>
+</div>
+</div>
+<!-- Customization Toggles -->
+<div class="space-y-2.5">
+<!-- Add Cheese -->
+<div class="flex items-center justify-between">
+<span class="text-xs text-neutral-300">Add Cheese</span>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-9 h-5 bg-neutral-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#FF8A00]"></div>
+</label>
+</div>
+<!-- Extra Patty -->
+<div class="flex items-center justify-between">
+<span class="text-xs text-neutral-300">Extra Patty</span>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox"/>
+<div class="w-9 h-5 bg-neutral-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#FF8A00]"></div>
+</label>
+</div>
+<!-- Add Bacon -->
+<div class="flex items-center justify-between">
+<span class="text-xs text-neutral-300">Add Bacon</span>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-9 h-5 bg-neutral-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#FF8A00]"></div>
+</label>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- END: Dish Customization Glass Card Drawer -->
+<!-- BEGIN: Bottom Action Sticky Bar (Quantity & Add to Cart) -->
+<div class="absolute bottom-4 left-4 right-4 z-40">
+<div class="h-16 rounded-2xl glass-nav px-3 flex items-center justify-between gap-3 shadow-2xl border border-white/10">
+<!-- Quantity Stepper -->
+<div class="flex items-center space-x-2.5 bg-white/5 rounded-xl px-2 py-1.5 border border-white/10">
+<button aria-label="Decrease quantity" class="w-6 h-6 rounded-lg glass-pill flex items-center justify-center text-neutral-300 hover:text-white active:scale-95 transition">
+<i class="w-3.5 h-3.5" data-lucide="minus"></i>
+</button>
+<span class="text-xs font-bold text-white px-0.5">1</span>
+<button aria-label="Increase quantity" class="w-6 h-6 rounded-lg glass-pill flex items-center justify-center text-neutral-300 hover:text-white active:scale-95 transition">
+<i class="w-3.5 h-3.5" data-lucide="plus"></i>
+</button>
+</div>
+<!-- Add to Cart Orange Button -->
+<button class="flex-1 h-11 rounded-xl bg-gradient-to-r from-[#FF8A00] to-[#FF6B00] glow-orange flex items-center justify-between px-4 text-xs font-bold text-white hover:brightness-110 active:scale-[0.98] transition">
+<span>Add to Cart</span>
+<span>$ 6.49</span>
+</button>
+</div>
+</div>
+<!-- END: Bottom Action Sticky Bar -->
+<!-- Home Indicator Bar -->
+<div class="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-32 h-1 bg-white/40 rounded-full z-50"></div>
+</section>
+</main>
+<!-- END: Showcase Container -->
+<!-- Icon initialization script -->
+<script data-purpose="feather-lucide-icons">
+    // Initialize Lucide vector icons
+    lucide.createIcons();
+  </script>
+</body></html>

@@ -1,0 +1,28 @@
+{
+  "projects": {
+    "default": "zestygo-dev",
+    "dev": "zestygo-dev",
+    "staging": "zestygo-staging",
+    "prod": "zestygo-prod"
+  },
+  "targets": {
+    "zestygo-dev": {
+      "hosting": {
+        "restaurant": ["zestygo-restaurant-dev"],
+        "admin": ["zestygo-admin-dev"]
+      }
+    },
+    "zestygo-staging": {
+      "hosting": {
+        "restaurant": ["zestygo-restaurant-staging"],
+        "admin": ["zestygo-admin-staging"]
+      }
+    },
+    "zestygo-prod": {
+      "hosting": {
+        "restaurant": ["zestygo-restaurant-prod"],
+        "admin": ["zestygo-admin-prod"]
+      }
+    }
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "indexes": [
+    { "collectionGroup": "restaurants", "queryScope": "COLLECTION", "fields": [
+      { "fieldPath": "status", "order": "ASCENDING" },
+      { "fieldPath": "serviceAreaIds", "arrayConfig": "CONTAINS" },
+      { "fieldPath": "ratingAvg", "order": "DESCENDING" } ] },
+    { "collectionGroup": "restaurants", "queryScope": "COLLECTION", "fields": [
+      { "fieldPath": "status", "order": "ASCENDING" },
+      { "fieldPath": "cuisines", "arrayConfig": "CONTAINS" },
+      { "fieldPath": "ratingAvg", "order": "DESCENDING" } ] },
+    { "collectionGroup": "restaurants", "queryScope": "COLLECTION", "fields": [
+      { "fieldPath": "status", "order": "ASCENDING" },
+      { "fieldPath": "searchTokens", "arrayConfig": "CONTAINS" },
+      { "fieldPath": "ratingAvg", "order": "DESCENDING" } ] },
+    { "collectionGroup": "orders", "queryScope": "COLLECTION", "fields": [
+      { "fieldPath": "customerId", "order": "ASCENDING" },
+      { "fieldPath": "createdAt", "order": "DESCENDING" } ] },
+    { "collectionGroup": "orders", "queryScope": "COLLECTION", "fields": [
+      { "fieldPath": "restaurantId", "order": "ASCENDING" },
+      { "fieldPath": "status", "order": "ASCENDING" },
+      { "fieldPath": "createdAt", "order": "DESCENDING" } ] },
+    { "collectionGroup": "orders", "queryScope": "COLLECTION", "fields": [
+      { "fieldPath": "status", "order": "ASCENDING" },
+      { "fieldPath": "createdAt", "order": "DESCENDING" } ] },
+    { "collectionGroup": "deliveries", "queryScope": "COLLECTION", "fields": [
+      { "fieldPath": "partnerId", "order": "ASCENDING" },
+      { "fieldPath": "createdAt", "order": "DESCENDING" } ] },
+    { "collectionGroup": "reviews", "queryScope": "COLLECTION", "fields": [
+      { "fieldPath": "restaurantId", "order": "ASCENDING" },
+      { "fieldPath": "status", "order": "ASCENDING" },
+      { "fieldPath": "createdAt", "order": "DESCENDING" } ] },
+    { "collectionGroup": "menu_items", "queryScope": "COLLECTION_GROUP", "fields": [
+      { "fieldPath": "restaurantApproved", "order": "ASCENDING" },
+      { "fieldPath": "isAvailable", "order": "ASCENDING" },
+      { "fieldPath": "nameTokens", "arrayConfig": "CONTAINS" } ] },
+    { "collectionGroup": "support_tickets", "queryScope": "COLLECTION", "fields": [
+      { "fieldPath": "uid", "order": "ASCENDING" },
+      { "fieldPath": "createdAt", "order": "DESCENDING" } ] },
+    { "collectionGroup": "support_tickets", "queryScope": "COLLECTION", "fields": [
+      { "fieldPath": "status", "order": "ASCENDING" },
+      { "fieldPath": "createdAt", "order": "DESCENDING" } ] },
+    { "collectionGroup": "admin_audit_logs", "queryScope": "COLLECTION", "fields": [
+      { "fieldPath": "actorUid", "order": "ASCENDING" },
+      { "fieldPath": "at", "order": "DESCENDING" } ] },
+    { "collectionGroup": "admin_audit_logs", "queryScope": "COLLECTION", "fields": [
+      { "fieldPath": "action", "order": "ASCENDING" },
+      { "fieldPath": "at", "order": "DESCENDING" } ] }
+  ],
+  "fieldOverrides": []
+}

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/>
+<title>ZestyGo - Animated Splash Screen</title>
+<!-- Tailwind CSS v3 CDN with Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              obsidian: '#100E10',
+              orange: '#FF8A00',
+              amber: '#FF9F1C',
+              gold: '#FFAE33',
+              cardBorder: 'rgba(255, 255, 255, 0.12)',
+              glassBg: 'rgba(28, 24, 25, 0.55)',
+            }
+          },
+          fontFamily: {
+            sans: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Display"', '"SF Pro Text"', 'Roboto', 'sans-serif'],
+          },
+          boxShadow: {
+            'glow-orange': '0 0 50px -10px rgba(255, 138, 0, 0.55)',
+            'glow-soft': '0 10px 40px -5px rgba(255, 140, 0, 0.35)',
+            'glass-inset': 'inset 0 1px 1px 0 rgba(255, 255, 255, 0.25)',
+          }
+        }
+      }
+    }
+  </script>
+<!-- BEGIN: Custom Glassmorphism Styles -->
+<style data-purpose="custom-glass-effects">
+    /* Deep iOS Dark Glassmorphism Styling matching reference aesthetics */
+    .glass-frosted {
+      background: rgba(30, 26, 28, 0.62);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      border: 1px solid rgba(255, 255, 255, 0.11);
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+    }
+    
+    .glass-pill {
+      background: rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* Ambient Warm Glow Orbs in Background */
+    .ambient-glow-1 {
+      position: absolute;
+      width: 380px;
+      height: 380px;
+      top: 15%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(circle, rgba(255, 138, 0, 0.28) 0%, rgba(255, 110, 0, 0.1) 45%, transparent 70%);
+      filter: blur(50px);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .ambient-glow-2 {
+      position: absolute;
+      width: 320px;
+      height: 320px;
+      bottom: 20%;
+      left: 50%;
+      transform: translate(-50%, 0);
+      background: radial-gradient(circle, rgba(255, 159, 28, 0.18) 0%, rgba(220, 80, 10, 0.06) 50%, transparent 75%);
+      filter: blur(60px);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Circular Progress Animation */
+    .progress-circle {
+      stroke-dasharray: 283;
+      stroke-dashoffset: 80;
+      transform: rotate(-90deg);
+      transform-origin: 50% 50%;
+      transition: stroke-dashoffset 0.8s ease-out;
+    }
+
+    @keyframes pulse-slow {
+      0%, 100% { transform: scale(1); opacity: 0.95; }
+      50% { transform: scale(1.05); opacity: 1; filter: drop-shadow(0 0 25px rgba(255, 159, 28, 0.8)); }
+    }
+
+    .animate-logo-pulse {
+      animation: pulse-slow 3s infinite ease-in-out;
+    }
+  </style>
+<!-- END: Custom Glassmorphism Styles -->
+</head>
+<body class="bg-[#100E10] text-neutral-100 font-sans h-full overflow-hidden flex items-center justify-center select-none antialiased">
+<!-- BEGIN: MobileDeviceFrame Container -->
+<!-- Constrained strictly to iOS viewport proportions for realistic mobile display -->
+<main class="relative w-full max-w-[430px] h-full sm:h-[880px] sm:max-h-[92vh] bg-[#100E10] sm:rounded-[52px] sm:border-[9px] sm:border-[#221F22] overflow-hidden flex flex-col justify-between shadow-2xl relative">
+<!-- BEGIN: BackgroundGlowEffects -->
+<!-- Warm radiant amber & orange ambient flares in background -->
+<div aria-hidden="true" class="ambient-glow-1"></div>
+<div aria-hidden="true" class="ambient-glow-2"></div>
+<!-- Subtle top vignette flare -->
+<div class="absolute -top-24 -left-20 w-72 h-72 bg-gradient-to-br from-amber-500/15 to-transparent rounded-full blur-3xl pointer-events-none z-0"></div>
+<!-- END: BackgroundGlowEffects -->
+<!-- BEGIN: iOSStatusBar -->
+<header class="relative z-20 pt-3 px-8 flex justify-between items-center text-xs text-neutral-400 font-medium">
+<time class="text-white text-[15px] font-semibold tracking-tight" datetime="09:41">9:41</time>
+<div class="flex items-center gap-2 text-white">
+<!-- Signal strength bars -->
+<svg class="w-4 h-3.5 fill-current" fill="none" viewbox="0 0 17 12">
+<rect height="4" rx="0.8" width="3" x="0" y="8"></rect>
+<rect height="6.5" rx="0.8" width="3" x="4.5" y="5.5"></rect>
+<rect height="9" rx="0.8" width="3" x="9" y="3"></rect>
+<rect height="11.5" rx="0.8" width="3" x="13.5" y="0.5"></rect>
+</svg>
+<!-- Wifi Icon -->
+<svg class="w-3.5 h-3.5 fill-current" viewbox="0 0 16 16">
+<path d="M8 12a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm-3.66-3.23a5.5 5.5 0 017.32 0 .75.75 0 101.04-1.08 7 7 0 00-9.4 0 .75.75 0 001.04 1.08zm-2.83-2.83a9.5 9.5 0 0112.98 0 .75.75 0 101.06-1.06 11 11 0 00-15.1 0 .75.75 0 101.06 1.06z" fill-rule="evenodd"></path>
+</svg>
+<!-- Battery Icon -->
+<div class="w-6 h-3 border border-white/80 rounded-md p-0.5 flex items-center relative">
+<div class="h-full bg-white rounded-xs w-4/5"></div>
+<div class="absolute -right-1 top-1 w-0.5 h-1 bg-white/80 rounded-r-xs"></div>
+</div>
+</div>
+</header>
+<!-- END: iOSStatusBar -->
+<!-- BEGIN: BrandCenterShowcase -->
+<section class="relative z-10 flex-1 flex flex-col items-center justify-center px-6 -mt-6" data-purpose="brand-presentation">
+<!-- Brand Cloche & Lightning Glowing Emblem -->
+<div class="relative mb-6 flex items-center justify-center">
+<!-- Intense Backlight Glow -->
+<div class="absolute w-28 h-28 rounded-full bg-gradient-to-tr from-[#FF8A00] to-[#FF9F1C] blur-2xl opacity-60 animate-pulse"></div>
+<!-- Stylized Cloche Pin Icon Container -->
+<div class="relative w-24 h-24 rounded-3xl bg-gradient-to-b from-[#2E2422] to-[#1C1618] border border-white/20 shadow-glow-orange flex items-center justify-center p-0.5">
+<div class="w-full h-full rounded-[22px] bg-gradient-to-br from-[#1C1618]/90 via-[#271E1D]/90 to-[#120E10] flex items-center justify-center shadow-glass-inset">
+<!-- Food Cloche with Fast Motion / Lightning Flare Accent -->
+<svg class="w-13 h-13 text-transparent transition-transform animate-logo-pulse" fill="none" height="54" viewbox="0 0 48 48" width="54">
+<defs>
+<lineargradient id="brandOrangeGrad" x1="0%" x2="100%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#FFB347"></stop>
+<stop offset="40%" stop-color="#FF8A00"></stop>
+<stop offset="100%" stop-color="#FF6200"></stop>
+</lineargradient>
+<filter height="140%" id="glowDrop" width="140%" x="-20%" y="-20%">
+<fegaussianblur result="blur" stddeviation="2"></fegaussianblur>
+<fecomposite in="SourceGraphic" in2="blur" operator="over"></fecomposite>
+</filter>
+</defs>
+<!-- Cloche Handle / Pin Top -->
+<circle cx="24" cy="11" fill="url(#brandOrangeGrad)" r="3"></circle>
+<!-- Food Cloche Dome -->
+<path d="M10 28C10 20.268 16.268 14 24 14C31.732 14 38 20.268 38 28H10Z" fill="url(#brandOrangeGrad)" filter="url(#glowDrop)"></path>
+<!-- Platter Base -->
+<path d="M7 32C7 30.8954 7.89543 30 9 30H39C40.1046 30 41 30.8954 41 32C41 33.1046 40.1046 34 39 34H9C7.89543 34 7 33.1046 7 32Z" fill="#FFAE33"></path>
+<!-- Lightning Speed Accent -->
+<path d="M26 18L20 26H25L23 31L29 23H24L26 18Z" fill="#FFFFFF" fill-opacity="0.95"></path>
+</svg>
+</div>
+</div>
+</div>
+<!-- Typography: Brand Name -->
+<h1 class="text-4xl tracking-tight font-extrabold text-neutral-100 flex items-center justify-center gap-0.5">
+<span>Zesty</span>
+<span class="bg-gradient-to-r from-[#FF8A00] via-[#FF9F1C] to-[#FFAE33] bg-clip-text text-transparent drop-shadow-[0_2px_14px_rgba(255,138,0,0.6)]">Go</span>
+</h1>
+<!-- Brand Tagline -->
+<p class="mt-2 text-sm text-neutral-400 font-medium tracking-wide">
+        Good Food. <span class="text-neutral-200">Lightning Mood.</span>
+</p>
+<!-- Glassmorphic Preview Floating Card -->
+<!-- Matches the exact frosted rounded aesthetic from screenshot -->
+<div class="mt-10 w-full max-w-[310px] glass-frosted rounded-3xl p-4 flex items-center gap-3.5 shadow-2xl transition-all" data-purpose="connecting-pill">
+<div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#FF8A00]/25 to-amber-600/10 border border-[#FF8A00]/40 flex items-center justify-center shrink-0">
+<svg class="w-5 h-5 text-[#FF9F1C] animate-pulse" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between">
+<span class="text-xs font-semibold text-neutral-200 tracking-tight">Active Radar</span>
+<span class="text-[10px] font-bold text-[#FF9F1C] bg-[#FF8A00]/15 px-2 py-0.5 rounded-full border border-[#FF8A00]/25">LIVE</span>
+</div>
+<p class="text-[12px] text-neutral-400 truncate mt-0.5 font-normal">Connecting to closest kitchens...</p>
+</div>
+</div>
+<!-- Modern Pulsing Circular Progress Status -->
+<div class="mt-8 flex flex-col items-center" data-purpose="progress-indicator">
+<div class="relative w-14 h-14 flex items-center justify-center">
+<svg class="w-full h-full" viewbox="0 0 100 100">
+<!-- Track circle -->
+<circle cx="50" cy="50" fill="transparent" r="45" stroke="rgba(255, 255, 255, 0.08)" stroke-width="6"></circle>
+<!-- Animated glowing progress fill -->
+<circle class="progress-circle" cx="50" cy="50" fill="transparent" id="progressRing" r="45" stroke="url(#orangeLinear)" stroke-linecap="round" stroke-width="6"></circle>
+<defs>
+<lineargradient id="orangeLinear" x1="0%" x2="100%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#FF9F1C"></stop>
+<stop offset="100%" stop-color="#FF6200"></stop>
+</lineargradient>
+</defs>
+</svg>
+<!-- Center Percentage Counter -->
+<span class="absolute text-xs font-bold text-white tracking-tighter" id="progressText">78%</span>
+</div>
+<p class="mt-2.5 text-[11px] font-medium text-neutral-400 tracking-normal flex items-center gap-1.5">
+<span class="inline-block w-1.5 h-1.5 rounded-full bg-[#FF8A00] animate-ping"></span>
+<span>Locating fresh bites nearby...</span>
+</p>
+</div>
+</section>
+<!-- END: BrandCenterShowcase -->
+<!-- BEGIN: BrandFooterDetails -->
+<footer class="relative z-10 pb-7 px-6 flex flex-col items-center gap-4" data-purpose="splash-footer">
+<!-- Engine Pill Badge -->
+<div class="glass-pill px-4 py-1.5 rounded-full flex items-center gap-2 shadow-sm">
+<div class="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399]"></div>
+<span class="text-[11px] text-neutral-300 font-medium tracking-wide">
+          Powered by <strong class="text-white font-semibold">ZestyGo Real-time Engine</strong>
+</span>
+</div>
+<!-- Home Gesture Indicator Line (iOS Bar) -->
+<div class="w-32 h-1 bg-neutral-600/70 rounded-full mt-1"></div>
+</footer>
+<!-- END: BrandFooterDetails -->
+</main>
+<!-- END: MobileDeviceFrame Container -->
+<!-- BEGIN: Interactive Simulation Script -->
+<script data-purpose="splash-progress-simulator">
+    document.addEventListener('DOMContentLoaded', () => {
+      const ring = document.getElementById('progressRing');
+      const text = document.getElementById('progressText');
+      
+      let progress = 78;
+      const circumference = 2 * Math.PI * 45; // ~282.7
+
+      // Smooth progress tick simulation
+      setInterval(() => {
+        if (progress < 99) {
+          progress += 1;
+        } else {
+          progress = 75;
+        }
+        const offset = circumference - (progress / 100) * circumference;
+        if (ring) ring.style.strokeDashoffset = offset;
+        if (text) text.textContent = `${progress}%`;
+      }, 160);
+    });
+  </script>
+<!-- END: Interactive Simulation Script -->
+</body></html>
